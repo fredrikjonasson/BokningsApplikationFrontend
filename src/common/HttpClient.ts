@@ -1,14 +1,14 @@
 export default class HttpClient {
-    async get(url){
+    async get(url: string) {
         return fetch(url, {
             method: "GET",
         })
     }
-    async post(url, body){
+    async post(url: string, body: any) {
         return fetch("http://apiurl.com/api/???", {
             method: "POST",
             body: body,
-            header: {
+            headers: {
                 Authorization: "Bearer ljdsöfkjasldöjfölasjfdöljsadölfjalskdf"
             }
         });
