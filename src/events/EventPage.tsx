@@ -11,10 +11,6 @@ const EventPage = () => {
         eventService.AddEvent(event.target);
     }
 
-    let addEvent = (e: any) => {
-        alert('hej')
-    }
-
     return (
         <div>
             <h2>Lägg till event</h2>

@@ -5,7 +5,7 @@ export default class HttpClient {
         })
     }
     async post(url: string, body: any) {
-        return fetch("http://apiurl.com/api/???", {
+        return fetch("http://https://localhost:44306/events/", {
             method: "POST",
             body: body,
             headers: {
