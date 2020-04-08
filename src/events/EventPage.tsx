@@ -1,14 +1,21 @@
-import React, { useState } from 'react'
+import React from 'react'
 import './EventsPage.css';
 import HttpClient from '../common/HttpClient';
 import EventService from '../services/EventService';
+import moment from 'moment';
 
 const eventService = new EventService(new HttpClient())
 
 const EventPage = () => {
     const handleSubmit = (event: any) => {
         event.preventDefault();
-        eventService.AddEvent(event.target);
+        var formObject = Object.fromEntries(new FormData(event.target));
+
+        var dto = {
+            ...formObject,
+            startDate: moment.utc(`${formObject.startDate} ${formObject.startTime}`)
+        }
+        eventService.AddEvent(dto);
     }
 
     return (

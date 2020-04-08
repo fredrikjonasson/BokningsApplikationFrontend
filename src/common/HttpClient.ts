@@ -7,10 +7,11 @@ export default class HttpClient {
     async post(url: string, body: any) {
         return fetch("https://localhost:44306/events/", {
             method: "POST",
-            body: body
-            // headers: {
-            //     Authorization: "Bearer ljdsöfkjasldöjfölasjfdöljsadölfjalskdf"
-            // }
+            body: JSON.stringify(body),
+            headers: {
+                "Content-Type": "application/json"
+                // Authorization: "Bearer ljdsöfkjasldöjfölasjfdöljsadölfjalskdf"
+            }
         });
     }
 }
