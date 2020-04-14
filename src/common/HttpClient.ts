@@ -4,8 +4,15 @@ export default class HttpClient {
             method: "GET",
         })
     }
+
+    baseUrl: string | undefined;
+
+    constructor(url: string | undefined) {
+        this.baseUrl = url;
+    }
+
     async post(url: string, body: any) {
-        return fetch("https://localhost:44306/events/", {
+        return fetch(`${this.baseUrl + url}`, {
             method: "POST",
             body: JSON.stringify(body),
             headers: {
@@ -14,4 +21,5 @@ export default class HttpClient {
             }
         });
     }
+
 }
