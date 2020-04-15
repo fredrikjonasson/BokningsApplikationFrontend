@@ -6,11 +6,11 @@ import * as serviceWorker from './serviceWorker';
 import EventPage from './events/EventPage';
 
 ReactDOM.render(
-  <React.StrictMode>
-    {/* <App /> */}
-    <EventPage />
-  </React.StrictMode>,
-  document.getElementById('root')
+    <React.StrictMode>
+        {/* <App /> */}
+        <EventPage />
+    </React.StrictMode>,
+    document.getElementById('root')
 );
 
 // If you want your app to work offline and load faster, you can change

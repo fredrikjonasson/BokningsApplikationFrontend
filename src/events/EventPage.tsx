@@ -3,6 +3,7 @@ import './EventsPage.css';
 import HttpClient from '../common/HttpClient';
 import EventService from '../services/EventService';
 import moment from 'moment';
+import AddInvite from '../participants/AddInvite';
 
 const eventService = new EventService(new HttpClient(process.env.REACT_APP_BASEURL))
 
@@ -25,6 +26,10 @@ const EventPage = () => {
         eventService.AddEvent(dto);
     }
 
+    const handleInvite = (invitations: string[]) => {
+        alert(invitations);
+    }
+
     return (
         <div>
             <h2>Lägg till event</h2>
@@ -33,6 +38,7 @@ const EventPage = () => {
                 <textarea form="event-form-data" name="description" placeholder="Beskrivning" cols={30} rows={10}></textarea>
                 <input name="startDate" type="date" />
                 <input name="startTime" type="time" />
+                <AddInvite handleInvite={handleInvite} />
                 <button type="submit">Spara event</button>
             </form>
         </div>
