@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import EventPage from './events/EventPage';
+//import { Route, Link } from 'react-router-dom';
 
 ReactDOM.render(
     <React.StrictMode>

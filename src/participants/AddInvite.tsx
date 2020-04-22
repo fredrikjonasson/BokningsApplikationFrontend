@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import ParticipantService from '../services/ParticipantService'
 
 
@@ -12,15 +12,19 @@ const AddInvite = (props: Props) => {
 
     const updateInvites = () => {
         setInvitations([...invitations, email]);
-        props.handleInvite(invitations);
+        setEmail("");
     }
+
+    useEffect(() => {
+        props.handleInvite(invitations);
+    }, [invitations]);
 
     return (
         <div>
             <h2>Lägg till deltagare</h2>
             <label htmlFor="Participant">Skriv in e-postadressen till den du vill bjuda in och tryck lägg till</label>
             <input name="Invite" type="text" placeholder="Invite" value={email} onChange={(e) => setEmail(e.target.value)} />
-            <button type="submit" onClick={updateInvites}>Lägg till i inbjudningar</button>
+            <button type="button" onClick={updateInvites}>Lägg till i inbjudningar</button>
             {invitations.map(invite => <p>{invite}</p>)}
         </div>
     )
