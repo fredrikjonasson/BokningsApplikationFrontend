@@ -7,7 +7,7 @@ import AddInvite from '../participants/AddInvite';
 
 const eventService = new EventService(new HttpClient("https://localhost:44306"))
 
-const EventPage = () => {
+const AddEventPage = () => {
     const [invitations, setInvitations] = useState<string[]>([]);
     const [name, setName] = useState<string>("");
     const [description, setDescription] = useState<string>("");
@@ -44,4 +44,4 @@ const EventPage = () => {
     )
 }
 
-export default EventPage
+export default AddEventPage

@@ -10,4 +10,8 @@ export default class EventService {
     AddEvent(event: any) {
         return this.client.post("/events", event);
     }
+
+    ShowEvents() {
+        return this.client.get("/events");
+    }
 }
