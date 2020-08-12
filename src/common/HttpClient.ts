@@ -1,6 +1,6 @@
 export default class HttpClient {
     async get(url: string) {
-        return fetch(url, {
+        return fetch(`${this.baseUrl + url}`, {
             method: "GET",
         })
     }

@@ -1,17 +1,34 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+//import App from './App';
 import * as serviceWorker from './serviceWorker';
 import AddEventPage from './events/AddEventPage';
 import ShowEventPage from './events/ShowEvent';
+import EditEventPage from './events/EditEventPage';
+import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 //import { Route, Link } from 'react-router-dom';
 
 ReactDOM.render(
     <React.StrictMode>
-        {/* <App /> */}
-        <AddEventPage />
-        <ShowEventPage />
+        <Router>
+            <Switch>
+                <Route path="/edit">
+                    <EditEventPage />
+                </Route>
+                <Route path="/">
+                    <nav>
+                        <ul>
+                            <li>
+                                <Link to="/edit">edit</Link>
+                            </li>
+                        </ul>
+                    </nav>
+                    <AddEventPage />
+                    <ShowEventPage />
+                </Route>
+            </Switch>
+        </Router>
     </React.StrictMode>,
     document.getElementById('root')
 );
