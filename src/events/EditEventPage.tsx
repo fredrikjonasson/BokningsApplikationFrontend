@@ -1,26 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import HttpClient from '../common/HttpClient';
 import EditEventForm from '../events/EditEventForm';
+import EventService from '../services/EventService';
 
+const eventService = new EventService(new HttpClient("https://localhost:44306/events/"));
+interface EventInvitations {
+    id: string;
+    EventId: string;
+    email: string;
+    invitationStatus: number;
+}
+interface Event {
+    sentInvitations: EventInvitations[];
+    id: string;
+    name: string;
+    description: string;
+    email: string;
+    invitationStatus: number;
+}
 const EditEventPage = () => {
     useEffect(() => {
-        async function fetchEvent(testUrl: string) {
-            const request = new HttpClient("https://localhost:44306/events/");
-            let answer = await request.get(eventId).then(
+        async function fetchEvent(eventId: string) {
+            let answer = await eventService.FetchEvent(eventId).then(
                 function (data: any) {
                     return data.json();
                 }
             ).catch(error => console.log(error));
-            updateEvent(answer);
+            setEventObject(answer);
         }
+
         var eventId = window.location.search;
         eventId = eventId.substr(1);
-        fetchEvent(eventId)
-    }, [])
+        fetchEvent(eventId);
+    }, []);
 
-    const [event, updateEvent] = useState<any>("");
-    // eee29dcd-d75a-4522-b207-4f284d2d8641
-    if (event == "") {
+
+    const [eventObject, setEventObject] = useState<Event>()
+    if (eventObject) {
         return (
             <div></div>
         )

@@ -3,10 +3,11 @@ import ParticipantService from '../services/ParticipantService'
 
 
 interface Props {
-    handleInvite(invitations: string[]): void
+    handleInvite(invitations: string[]): void;
 }
 
 const AddInvite = (props: Props) => {
+
     const [email, setEmail] = useState<string>("")
     const [invitations, setInvitations] = useState<string[]>([])
 
