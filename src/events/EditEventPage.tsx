@@ -4,21 +4,23 @@ import EditEventForm from '../events/EditEventForm';
 import EventService from '../services/EventService';
 
 const eventService = new EventService(new HttpClient("https://localhost:44306/events/"));
-interface EventInvitations {
+interface EventInvitation {
     id: string;
     EventId: string;
     email: string;
     invitationStatus: number;
 }
 interface Event {
-    sentInvitations: EventInvitations[];
+    sentInvitations: EventInvitation[];
     id: string;
     name: string;
     description: string;
     email: string;
-    invitationStatus: number;
+    startDate: string;
 }
 const EditEventPage = () => {
+    const [eventObject, setEventObject] = useState<Event>()
+
     useEffect(() => {
         async function fetchEvent(eventId: string) {
             let answer = await eventService.FetchEvent(eventId).then(
@@ -26,7 +28,7 @@ const EditEventPage = () => {
                     return data.json();
                 }
             ).catch(error => console.log(error));
-            setEventObject(answer);
+            setEventObject(answer as Event);
         }
 
         var eventId = window.location.search;
@@ -34,16 +36,34 @@ const EditEventPage = () => {
         fetchEvent(eventId);
     }, []);
 
+    const handleSubmit = (event: any) => {
+        event.preventDefault();
+        var formObject = Object.fromEntries(new FormData(event.target));
 
-    const [eventObject, setEventObject] = useState<Event>()
-    if (eventObject) {
+        if (eventObject) {
+            var dto = {
+                Id: eventObject.id,
+                Name: eventObject.name,
+                Description: eventObject.description,
+                StartDate: moment.utc(`${formObject.startDate} ${formObject.startTime}`),
+                SentInvitations: eventObject.sentInvitations
+            }
+            eventService.EditEvent(dto, eventObject.id);
+
+        }
+    }
+
+
+    if (!eventObject) {
         return (
-            <div></div>
+            <div>
+                <h1>Error! Could not fetch requested event</h1>
+            </div>
         )
     } else {
         return (
             <div>
-                <EditEventForm event={event} />
+                <EditEventForm event={eventObject} />
             </div>
         );
 

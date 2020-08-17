@@ -1,49 +1,52 @@
 import React, { useState, useEffect } from 'react'
 import ParticipantService from '../services/ParticipantService'
 
-
-interface EventInvitations {
+interface EventInvitation {
     id: string;
-    EventId: string;
-    email: string;
-    invitationStatus: number;
-}
-interface Event {
-    sentInvitations: EventInvitations[];
-    id: string;
-    name: string;
-    description: string;
+    eventId: string;
     email: string;
     invitationStatus: number;
 }
 
 interface Props {
-    handleInvite(invitations: EventInvitations[]): void;
-    eventObject: Event;
+    addMoreInvites(invitation: string): void;
+    eventInvitations: EventInvitation[]
+
 }
 
-interface PropsDto {
-    propsDto: Props;
-}
 
-const EditAndListInvites = (props: PropsDto) => {
+const EditAndListInvites = (props: Props) => {
 
-    const [eventObject, setEventObject] = useState<Event>();
     const [email, setEmail] = useState<string>("")
+    const [eventInvitations, setEventInvitations] = useState<EventInvitation[]>();
 
     const updateInvites = () => {
-
-        if ((eventObject?.sentInvitations.includes(email))) {
-            alert("You can't add the same email twice");
-        } else {
-            props.propsDto.handleInvite([...invitations, email]);
+        if (eventInvitations) {
+            let scanArray = [];
+            for (const iterator of eventInvitations) {
+                scanArray.push(iterator.email);
+            }
+            if (scanArray.includes(email)) {
+                alert("You can't add the same email twice");
+            } else {
+                props.addMoreInvites(email);
+            }
+            if (eventInvitations) {
+                copyEventObject.sentInvitations.push(newInvitation);
+                setEventObject(copyEventObject);
+            }
         }
         setEmail("");
     }
 
+
+
     useEffect(() => {
-        setEventObject(props.propsDto.eventObject);
-    }, [props.propsDto.eventObject]);
+        console.log("Test state")
+        if (props.eventInvitations) {
+            setEventInvitations(props.eventInvitations);
+        }
+    }, []);
 
     return (
         <div>
@@ -51,9 +54,8 @@ const EditAndListInvites = (props: PropsDto) => {
             <label htmlFor="Participant">Skriv in e-postadressen till den du vill bjuda in och tryck lägg till</label>
             <input name="Invite" type="text" placeholder="Invite" value={email} onChange={(e) => setEmail(e.target.value)} />
             <button type="button" onClick={updateInvites}>Lägg till i inbjudningar</button>
-            {invitations.map(invite => <p>{invite}</p>)}
+            {eventInvitations?.map(invite => <p>{invite.email}</p>)}
         </div>
     )
-
 }
 export default EditAndListInvites

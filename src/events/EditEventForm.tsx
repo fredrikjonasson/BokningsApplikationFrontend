@@ -6,101 +6,84 @@ import moment from 'moment';
 import EditEventPage from './EditEventPage';
 import { stringify } from 'querystring';
 import EditAndListInvites from '../participants/EditAndListInvites';
+import { v4 as uuidv4 } from 'uuid';
 
-const eventService = new EventService(new HttpClient("https://localhost:44306"))
-interface EventInvitations {
+
+interface EventInvitation {
     id: string;
-    EventId: string;
+    eventId: string;
     email: string;
     invitationStatus: number;
 }
 interface Event {
-    sentInvitations: EventInvitations[];
+    sentInvitations: EventInvitation[];
     id: string;
     name: string;
     description: string;
     email: string;
-    invitationStatus: number;
+    startDate: string;
 }
-const EditEventForm = (props: any) => {
 
-    const [eventObject, setEventObject] = useState<Event>()
+interface Props {
+    event: Event
+}
+
+const EditEventForm = (props: Props) => {
+
     const [eventName, setEventName] = useState<string>()
     const [eventDescription, setEventDescription] = useState<string>()
-    const [eventInvitations, setEventInvitations] = useState<EventInvitations[]>()
+    const [startDate, setEventStartDate] = useState<string>()
+    const [eventInvitations, setEventInvitations] = useState<EventInvitation[]>();
 
-    const handleSubmit = (event: any) => {
-        event.preventDefault();
-        var formObject = Object.fromEntries(new FormData(event.target));
-
-        if (eventObject) {
-            var dto = {
-                Id: eventObject.id,
-                Name: eventObject.name,
-                Description: eventObject.description,
-                StartDate: moment.utc(`${formObject.startDate} ${formObject.startTime}`),
-                SentInvitations: eventObject.sentInvitations
-            }
-            eventService.EditEvent(dto, eventObject.id);
-
-        }
-    }
 
     useEffect(() => {
-        if (eventObject) {
-            setEventName(eventObject.name);
-            setEventDescription(eventObject.description);
-        } else {
-            alert("Error has occured in EditEventFormComponent");
-        }
-    }, [eventObject]);
+    }, [eventName, eventDescription, startDate]);
+
 
     useEffect(() => {
-        if (eventName && eventObject) {
-            let tempObject = eventObject;
-            tempObject.name = eventName;
-            setEventObject(tempObject);
-        }
-        if (eventDescription && eventObject) {
-            let tempObject = eventObject;
-            tempObject.description = eventDescription;
-            setEventObject(tempObject);
-        }
-        if (eventInvitations && eventObject) {
-            let tempObject = eventObject;
-            tempObject.sentInvitations = eventInvitations;
-            setEventObject(tempObject);
-        }
-    }, [eventName] || [eventDescription] || eventInvitations);
-
-    useEffect(() => {
-        setEventObject(props.event);
+        setEventName(props.event.name);
+        setEventDescription(props.event.description);
+        setEventDescription(props.event.startDate);
     }, []);
 
     // Tid
-    let prefilledStartTime = props.event.startDate.substr(11, 5);
+    let prefilledStartTime = startDate?.substr(11, 5);
     // Datum
-    let prefilledStartDate = props.event.startDate.substr(0, 10);
+    let prefilledStartDate = startDate?.substr(0, 10);
 
-    let propsDto = {
-        handleInvite: (invitations: EventInvitations[]) => {
-            setEventInvitations(invitations);
-        },
-        eventObject: eventObject as Event
+    let addMoreInvites = (invitation: string) => {
+        let newInvitation: EventInvitation = {
+            id: uuidv4(),
+            eventId: props.event.id,
+            email: invitation,
+            invitationStatus: 0
+        }
+        if (eventInvitations && newInvitation) {
+            setEventInvitations([...eventInvitations, newInvitation]);
+        } else {
+            setEventInvitations([newInvitation]);
+        }
+
     }
-    return (
-        <div>
-            <h2>Redigera event</h2>
-            <form className="event-form" onSubmit={handleSubmit} id="event-form-data">
-                <input name="name" type="text" value={name} onChange={(e) => setEventName(e.target.value)} placeholder={props.event.name} />
-                <textarea form="event-form-data" name="description" value={eventDescription} onChange={(e) => setEventDescription(e.target.value)} placeholder={props.event.description} cols={30} rows={10}></textarea>
-                <input name="startDate" type="date" defaultValue={prefilledStartDate} />
-                <input name="startTime" type="time" defaultValue={prefilledStartTime} />
-                <EditAndListInvites propsDto={propsDto} />
-                <button type="submit">Spara redigerat event</button>
-            </form>
-        </div>
-    )
+    if (props.event) {
+        return (
+            <div>
+                <h2>Redigera event</h2>
+                <form className="event-form" onSubmit={handleSubmit} id="event-form-data">
+                    <input name="name" type="text" value={eventName} onChange={(e) => setEventName(e.target.value)} placeholder={eventName} />
+                    <textarea form="event-form-data" name="description" value={eventDescription} onChange={(e) => setEventDescription(e.target.value)} placeholder={eventDescription} cols={30} rows={10}></textarea>
+                    <input name="startDate" type="date" defaultValue={prefilledStartDate} />
+                    <input name="startTime" type="time" defaultValue={prefilledStartTime} />
+                    <EditAndListInvites addMoreInvites={addMoreInvites} eventInvitations={props.event.sentInvitations} />
+                    <button type="submit">Spara redigerat event</button>
+                </form>
+            </div>
+        )
+    } else {
+        return (
+            <h1>Error in editEventform.</h1>
+        )
+    }
 }
 
 export default EditEventForm
