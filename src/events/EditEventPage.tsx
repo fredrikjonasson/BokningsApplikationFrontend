@@ -1,12 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, FormEvent } from 'react';
 import HttpClient from '../common/HttpClient';
 import EditEventForm from '../events/EditEventForm';
 import EventService from '../services/EventService';
+import moment from 'moment';
+import { v4 as uuidv4 } from 'uuid';
+import EditAndListInvites from '../participants/EditAndListInvites';
+
 
 const eventService = new EventService(new HttpClient("https://localhost:44306/events/"));
 interface EventInvitation {
     id: string;
-    EventId: string;
+    eventId: string;
     email: string;
     invitationStatus: number;
 }
@@ -36,21 +40,49 @@ const EditEventPage = () => {
         fetchEvent(eventId);
     }, []);
 
-    const handleSubmit = (event: any) => {
-        event.preventDefault();
-        var formObject = Object.fromEntries(new FormData(event.target));
-
+    const addInvitation = (newEventInvitation: EventInvitation) => {
         if (eventObject) {
-            var dto = {
-                Id: eventObject.id,
-                Name: eventObject.name,
-                Description: eventObject.description,
-                StartDate: moment.utc(`${formObject.startDate} ${formObject.startTime}`),
-                SentInvitations: eventObject.sentInvitations
+
+            let copyEvent: Event = eventObject;
+            copyEvent.sentInvitations.push(newEventInvitation);
+            setEventObject(copyEvent);
+        }
+    }
+
+    const buildInvitation = (email: string) => {
+        let duplicate: boolean = false;
+        if (eventObject) {
+            for (const iterator of eventObject.sentInvitations) {
+                if (iterator.email == email) {
+                    duplicate = true;
+                    alert("You can't invite same person more than once.")
+                }
             }
-            eventService.EditEvent(dto, eventObject.id);
+            if (!duplicate) {
+                let newInvitation: EventInvitation = {
+                    id: uuidv4(),
+                    eventId: eventObject.id,
+                    email: email,
+                    invitationStatus: 0
+                }
+                addInvitation(newInvitation);
+            }
+        }
+    }
+
+    const updateEventObject = (formObject: any) => {
+        if (eventObject) {
+
+            var copyEventObject: Event = eventObject;
+            copyEventObject.name = formObject.name;
+            copyEventObject.description = formObject.description;
+            copyEventObject.startDate = moment.utc(`${formObject.startDate} ${formObject.startTime}`).toString();
+            setEventObject(copyEventObject);
+            const eventService = new EventService(new HttpClient("https://localhost:44306"));
+            eventService.EditEvent(eventObject, eventObject.id);
 
         }
+
     }
 
 
@@ -63,7 +95,9 @@ const EditEventPage = () => {
     } else {
         return (
             <div>
-                <EditEventForm event={eventObject} />
+                <EditEventForm updateEventObject={updateEventObject} eventName={eventObject.name} eventDescription={eventObject.description} eventStartDateAndTime={eventObject.startDate}>
+                    <EditAndListInvites buildInvitation={buildInvitation} eventInvitations={eventObject.sentInvitations} />
+                </EditEventForm>
             </div>
         );
 

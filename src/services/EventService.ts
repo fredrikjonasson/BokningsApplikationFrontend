@@ -15,7 +15,6 @@ export default class EventService {
     }
 
     EditEvent(event: any, id: string) {
-        console.log(id);
         return this.client.put("/event", id, event)
     }
 
