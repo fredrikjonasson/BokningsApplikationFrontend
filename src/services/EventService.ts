@@ -8,14 +8,20 @@ export default class EventService {
     }
 
     FetchEvent(id: string) {
-        return this.client.get("/event", id);
+        return this.client.get("/events", id);
     }
+
+    FetchParticipants(id: string) {
+        id = id + "/participants"
+        return this.client.get("/events", id);
+    }
+
     AddEvent(event: any) {
         return this.client.post("/events", event);
     }
 
     EditEvent(event: any, id: string) {
-        return this.client.put("/event", id, event)
+        return this.client.put("/events", id, event)
     }
 
     ShowEvents() {

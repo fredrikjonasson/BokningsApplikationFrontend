@@ -49,9 +49,9 @@ const EditEventForm = (props: Props) => {
                     <textarea form="event-form-data" name="description" value={eventDescription} onChange={(e) => setEventDescription(e.target.value)} placeholder={eventDescription} cols={30} rows={10}></textarea>
                     <input name="startDate" id="startDate" type="date" defaultValue={startDate} />
                     <input name="startTime" id="startTime" type="time" defaultValue={startTime} />
+                    {props.children}
                     <button type="submit">Spara redigerat event</button>
                 </form>
-                {props.children}
             </div>
         )
     } else {

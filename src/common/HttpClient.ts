@@ -1,8 +1,8 @@
 export default class HttpClient {
     async get(url: string, id?: string) {
         if (id) {
-            console.log(this.baseUrl + id);
-            return fetch(`${this.baseUrl + id}`, {
+            console.log(this.baseUrl + url + "/" + id);
+            return fetch(`${this.baseUrl + url + "/" + id}`, {
                 method: "GET",
             })
         } else {

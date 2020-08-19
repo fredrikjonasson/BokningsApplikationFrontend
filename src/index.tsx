@@ -7,6 +7,8 @@ import AddEventPage from './events/AddEventPage';
 import ShowEventPage from './events/ShowEvent';
 import EditEventPage from './events/EditEventPage';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
+import EditAndListInvites from './participants/EditAndListInvites';
+import ListParticipantsPage from './participants/ListParticipantsPage';
 //import { Route, Link } from 'react-router-dom';
 
 ReactDOM.render(
@@ -15,6 +17,9 @@ ReactDOM.render(
             <Switch>
                 <Route path="/edit">
                     <EditEventPage />
+                </Route>
+                <Route path="/participant">
+                    <ListParticipantsPage />
                 </Route>
                 <Route path="/">
                     <nav>

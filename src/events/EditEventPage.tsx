@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 import EditAndListInvites from '../participants/EditAndListInvites';
 
 
-const eventService = new EventService(new HttpClient("https://localhost:44306/events/"));
+const eventService = new EventService(new HttpClient("https://localhost:44306"));
 interface EventInvitation {
     id: string;
     eventId: string;
@@ -34,7 +34,6 @@ const EditEventPage = () => {
             ).catch(error => console.log(error));
             setEventObject(answer as Event);
         }
-
         var eventId = window.location.search;
         eventId = eventId.substr(1);
         fetchEvent(eventId);
@@ -72,7 +71,6 @@ const EditEventPage = () => {
 
     const updateEventObject = (formObject: any) => {
         if (eventObject) {
-
             var copyEventObject: Event = eventObject;
             copyEventObject.name = formObject.name;
             copyEventObject.description = formObject.description;
@@ -80,9 +78,7 @@ const EditEventPage = () => {
             setEventObject(copyEventObject);
             const eventService = new EventService(new HttpClient("https://localhost:44306"));
             eventService.EditEvent(eventObject, eventObject.id);
-
         }
-
     }
 
 
