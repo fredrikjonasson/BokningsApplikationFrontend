@@ -7,6 +7,10 @@ export default class EventService {
         this.client = client;
     }
 
+    FetchInvitation(id: string) {
+        return this.client.get("", id)
+    }
+
     FetchEvent(id: string) {
         return this.client.get("/events", id);
     }
