@@ -9,7 +9,7 @@ import EditEventPage from './events/EditEventPage';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import EditAndListInvites from './participants/EditAndListInvites';
 import ListParticipantsPage from './participants/ListParticipantsPage';
-import InvitationPage from './participants/InvitationPage';
+import ViewAndRespondToInvitation from './participants/ViewAndRespondToInvitation';
 //import { Route, Link } from 'react-router-dom';
 
 ReactDOM.render(
@@ -18,7 +18,7 @@ ReactDOM.render(
             <Switch>
                 <Route path="/edit" component={EditEventPage} />
                 <Route path="/participant" component={ListParticipantsPage} />
-                <Route path='/invitations/:id' component={InvitationPage} />
+                <Route path='/invitations/:id' component={ViewAndRespondToInvitation} />
                 <Route path="/">
                     <nav>
                         <ul>
