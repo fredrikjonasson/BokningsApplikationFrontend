@@ -4,6 +4,7 @@ import ParticipantService from '../services/ParticipantService'
 
 interface Props {
     handleInvite(invitations: string[]): void;
+    invitations: string[]
 }
 
 const AddInvite = (props: Props) => {
@@ -16,6 +17,10 @@ const AddInvite = (props: Props) => {
         setEmail("");
     }
 
+    const removeInvite = (e: any) => {
+        setInvitations(invitations => invitations.filter(element => element != e));
+    }
+
     useEffect(() => {
         props.handleInvite(invitations);
     }, [invitations]);
@@ -26,7 +31,11 @@ const AddInvite = (props: Props) => {
             <label htmlFor="Participant">Skriv in e-postadressen till den du vill bjuda in och tryck lägg till</label>
             <input name="Invite" type="text" placeholder="Invite" value={email} onChange={(e) => setEmail(e.target.value)} />
             <button type="button" onClick={updateInvites}>Lägg till i inbjudningar</button>
-            {invitations.map(invite => <p>{invite}</p>)}
+            {props.invitations.map(invite => {
+                return (<div>
+                    <p>{invite} <button type="button" id="removeInvitation" onClick={() => { removeInvite(invite) }}>Remove</button></p>
+                </div>)
+            })}
         </div>
     )
 

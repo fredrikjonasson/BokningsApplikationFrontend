@@ -5,6 +5,7 @@ import EventService from '../services/EventService';
 import moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
 import EditAndListInvites from '../participants/EditAndListInvites';
+import { exception } from 'console';
 
 
 const eventService = new EventService(new HttpClient("https://localhost:44306"));
@@ -27,12 +28,12 @@ const EditEventPage = () => {
 
     useEffect(() => {
         async function fetchEvent(eventId: string) {
-            let answer = await eventService.FetchEvent(eventId).then(
+            let answer: Event = await eventService.FetchEvent(eventId).then(
                 function (data: any) {
                     return data.json();
                 }
             ).catch(error => console.log(error));
-            setEventObject(answer as Event);
+            return setEventObject(answer);
         }
         var eventId = window.location.search;
         eventId = eventId.substr(1);
@@ -41,10 +42,18 @@ const EditEventPage = () => {
 
     const addInvitation = (newEventInvitation: EventInvitation) => {
         if (eventObject) {
+            setEventObject(eventObject => {
+                if (eventObject) {
+                    eventObject.sentInvitations.push(newEventInvitation);
+                } else {
+                    throw new Error("something is wrong in editeventpage.tsx");
 
-            let copyEvent: Event = eventObject;
-            copyEvent.sentInvitations.push(newEventInvitation);
-            setEventObject(copyEvent);
+                }
+                return eventObject;
+            });
+        } else {
+            throw new Error("something is wrong in editeventpage.tsx");
+
         }
     }
 
@@ -66,18 +75,27 @@ const EditEventPage = () => {
                 }
                 addInvitation(newInvitation);
             }
+        } else {
+            throw new Error("something is wrong in editeventpage.tsx");
+
         }
     }
 
     const updateEventObject = (formObject: any) => {
         if (eventObject) {
-            var copyEventObject: Event = eventObject;
-            copyEventObject.name = formObject.name;
-            copyEventObject.description = formObject.description;
-            copyEventObject.startDate = moment.utc(`${formObject.startDate} ${formObject.startTime}`).toString();
-            setEventObject(copyEventObject);
+            setEventObject((eventObject) => {
+                if (eventObject) {
+                    eventObject.name = formObject.name;
+                    eventObject.description = formObject.description;
+                    eventObject.startDate = moment.utc(`${formObject.startDate} ${formObject.startTime}`).toString();
+                    return eventObject
+                }
+            });
             const eventService = new EventService(new HttpClient("https://localhost:44306"));
             eventService.EditEvent(eventObject, eventObject.id);
+        } else {
+            throw new Error("something is wrong in editeventpage.tsx");
+
         }
     }
 

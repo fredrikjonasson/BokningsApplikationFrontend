@@ -37,7 +37,7 @@ const AddEventPage = () => {
                 <textarea form="event-form-data" name="description" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Beskrivning" cols={30} rows={10}></textarea>
                 <input name="startDate" type="date" />
                 <input name="startTime" type="time" />
-                <AddInvite handleInvite={handleInvite} />
+                <AddInvite invitations={invitations} handleInvite={handleInvite} />
                 <button type="submit">Spara event</button>
             </form>
         </div>
